@@ -1,6 +1,6 @@
-# Hallmark
+# Hallmark for Codex
 
-**A design skill for Claude Code, Codex, Cursor and OpenCode that refuses to look AI-generated.**
+**A Codex-focused adaptation of [Nutlope/hallmark](https://github.com/Nutlope/hallmark), preserving its themes, visual checks and MIT license.**
 
 [usehallmark.com](https://www.usehallmark.com) &nbsp;·&nbsp; forty-eight themes &nbsp;·&nbsp; custom on request &nbsp;·&nbsp; redesign and audit by name
 
@@ -21,7 +21,7 @@ The gates come in tiers. The **Floor** never ships (contrast, focus, reduced mot
 - **Custom.** Ask for a custom page and Hallmark designs from your prompt alone, under the same rules and checks.
 - **Your real product.** Point it at a URL, a dev server or an app and it captures the screenshots itself.
 - **Real photographs.** 755 openly licensed photos, picked per subject and credited on the page.
-- **Redesign and audit.** `/hallmark redesign <path>` rebuilds a page and keeps its content and wiring; `/hallmark audit <path>` only reports.
+- **Redesign and audit.** `$hallmark redesign <path>` rebuilds a page and keeps its content and wiring; `$hallmark audit <path>` only reports.
 
 ## Themes
 
@@ -76,32 +76,44 @@ Each page is self-contained HTML and CSS, stamped in its first CSS comment with 
 Hallmark never starts on a design that already exists unless you name it:
 
 ```
-/hallmark redesign ./src/app
-/hallmark audit ./index.html
+$hallmark redesign ./src/app
+$hallmark audit ./index.html
 ```
 
 A full redesign keeps the content and the wiring and changes the system and the layout; say *keep the layout* for a restyle or *polish* for only the tells. `sloplint --before` records every link, field, handler and heading first, `sloplint --kept` fails the redesign if one went missing, and the handoff is a side-by-side before and after.
 
-## Install
+## Install for Codex
 
+Requires Node.js 18 or later. Install directly from this repository:
+
+```sh
+npx skills add mariocasalini/hallmark_forCodex -g --agent codex
 ```
-npx skills add nutlope/hallmark -g
+
+Or clone the repository and use the included installer:
+
+```sh
+git clone https://github.com/mariocasalini/hallmark_forCodex.git
+cd hallmark_forCodex
+node skills/hallmark/scripts/install.mjs --global
 ```
 
-`-g` installs for every project; leave it off to install into the current one. Needs Node 18 or later. The browser checks (`sloplint --render`, screenshots) also need `npm i -g puppeteer-core` and Chrome; without them the static checks still run.
+For a project-local installation, run the installer by absolute path from the target project's directory with `--project` instead of `--global`. Use `--dry-run` to validate without copying. Existing installations are never overwritten. Global copies go to `~/.agents/skills/hallmark`; local copies go to `.agents/skills/hallmark`. Start a new Codex chat after installation.
 
-| Harness | Lands in | Invoke |
-| --- | --- | --- |
-| Claude Code | `~/.claude/skills/hallmark` | `/hallmark <prompt>` or describe a new build |
-| Codex CLI | `~/.agents/skills/hallmark` | `$hallmark <prompt>` or describe a new build |
-| Cursor | finds the copies above | `/hallmark <prompt>` or describe a new build |
-| OpenCode | finds the copies above | `/hallmark <prompt>` or describe a new build |
+Invoke with `$hallmark <prompt>`, `$hallmark redesign <target>` or `$hallmark audit <target>`. Automatic selection remains enabled for new design requests.
 
-- **One harness only:** `npx skills add nutlope/hallmark -g --agent claude-code` (or `codex`, `opencode`, `cursor`, `github-copilot`).
-- **As a Claude Code plugin:** `/plugin marketplace add nutlope/hallmark`, then `/plugin install hallmark@hallmark` (invoked as `/hallmark:hallmark`).
-- **From a clone:** `node skills/hallmark/scripts/install.mjs` validates every theme and reference before it copies; `install-hook.mjs` adds an edit-time Floor check to Claude Code.
-- **Lint any page:** `node skills/hallmark/scripts/sloplint.mjs <file-or-dir> --render`.
-- **If it does not fire on its own,** name it: *use hallmark to build ...*.
+Browser checks require `puppeteer-core` and Chrome/Chromium. Without them the static checks still run, and the handoff must disclose that rendering was not verified.
+
+### Codex adaptation
+
+- Codex-compatible skill metadata and `agents/openai.yaml`.
+- Tools and browser previews selected from the current session's capabilities.
+- Independent reviews when delegation is available and authorized; otherwise an explicitly labeled in-thread review.
+- Clarifying questions only for material gaps in the request.
+- No Claude Code hooks or agent-setting changes.
+- Optional Together image generation requires authorization, even when an API key exists.
+
+The original 48 themes, photo catalog, lint rules and license are retained. The site and legacy Claude plugin metadata remain as upstream reference material; use the Codex installation instructions above for this adaptation.
 
 ## Licence
 

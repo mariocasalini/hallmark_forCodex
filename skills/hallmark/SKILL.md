@@ -1,10 +1,10 @@
 ---
 name: hallmark
-description: "Design skill for websites and new pages that look designed, not generated. Use when the user asks to build or design something new, or names Hallmark. Never use it on an existing design unless the user names Hallmark, as in `/hallmark redesign <path>`."
-argument-hint: "<prompt> | redesign <path> | audit <path>"
-version: 2.0.0
+description: "Design distinctive websites, new pages and UI components with Hallmark themes and visual checks. Use for new interface design or when the user names Hallmark. Apply to existing designs only when Hallmark is explicitly requested."
+license: MIT
 metadata:
-  opencode/slash: "true"
+  version: "2.0.0"
+  adaptation: "codex"
 ---
 
 # Hallmark
@@ -49,17 +49,17 @@ Above the Floor, a **Reflex** gate is a default a model falls into, waivable on 
 
 **Verbs,** only when the user names Hallmark: `redesign <target>` (a full redesign keeping content and wiring) and `audit <target>` (a report); read [`references/redesign.md`](references/redesign.md) first. Any other change to an existing design is not a Hallmark run: do it as asked, in the project's own system.
 
-Codex CLI and OpenCode read `references/flow.md` § Harnesses first; other harnesses run this file as written.
+Read `references/flow.md` § Harnesses first for Codex execution. Resolve `<skill-dir>` to the absolute directory containing this SKILL.md; run project-writing commands from the target project directory.
 
 ### 0. Pre-flight
 
-Signals, in order: `design.md` or `DESIGN.md` at the root (a locked system: it overrides everything below, and pages share it); `.hallmark/brand-spec.md` or a prompt naming a real brand (run [`references/brand-truth.md`](references/brand-truth.md); never theme a real brand from memory); the project's fonts, palette, spacing, motion libraries and framework (`package.json`, Tailwind config, `:root`, tokens, font links); **the product itself**: a URL, a running dev server, a project that starts with one command or an app on the machine, which the build captures with `scripts/capture.mjs` (`imagery.md` § 4); an Inspo MCP server (`mcp__inspo__*` tools: signal 8, `flow.md` § Signal 8; a `/hallmark` prompt, Hallmark named or a custom ask beats it); `TOGETHER_API_KEY` set (signal 9, the comp step).
+Signals, in order: `design.md` or `DESIGN.md` at the root (a locked system: it overrides everything below, and pages share it); `.hallmark/brand-spec.md` or a prompt naming a real brand (run [`references/brand-truth.md`](references/brand-truth.md); never theme a real brand from memory); the project's fonts, palette, spacing, motion libraries and framework (`package.json`, Tailwind config, `:root`, tokens, font links); **the product itself**: a URL, a running dev server, a project that starts with one command or an app on the machine, which the build captures with `scripts/capture.mjs` (`imagery.md` § 4); an Inspo MCP server (`mcp__inspo__*` tools: signal 8, `flow.md` § Signal 8; a `$hallmark` prompt, Hallmark named or a custom ask beats it); `TOGETHER_API_KEY` set (signal 9, the comp step).
 
 Output one block (file:line citations, what is preserved, what is introduced), cached in `.hallmark/preflight.json` (`flow.md` § Pre-flight).
 
 ### 1. Ask once
 
-One message, even on a five-word prompt:
+Use the prompt and project evidence first. Ask only for missing information that materially affects the result; do not repeat answered questions or require confirmation for routine reversible work. If clarification is needed, combine the relevant items from this template:
 
 > *Before I build, four things. 1. **Material**, the one that matters most: what can the page show? Screenshots or a screen recording (or point me at the app, its URL or its folder and I will run it and take them), your photos, real numbers (customers, uptime, prices), a quote with the name of who said it, logos you may use. Paste them or give paths; without photos I place stand-ins from Hallmark's photo library that your own replace later, and I never invent a number, a quote or a logo. 2. **Audience**: who uses this and what do they care about? 3. **Use**: the one action the page should drive. 4. **Tone**: pick an extreme (editorial, brutalist, soft, utilitarian, luxury, playful, technical, austere); "clean and modern" is not a tone. Plus the vibe in 4 to 8 words and an anchor colour if you have one. Or say **go ahead** and I will infer and tell you what I picked.*
 
@@ -136,12 +136,12 @@ A custom run's rows are in `direction.md`. Then one quiet line, skipped in compo
 - **Page invariants** (F15): one primary button style, one container width, one column gap below the hero, one radius per nesting level, never more centred heading groups than left-aligned ones.
 - **Type and motion** (`craft.md` § 1 and § 5). The theme's faces, two families at most (three with one outlier role); body 16px or more; heads one weight and one colour (38iii); labels never mono unless mono is the material (64). Eight states on every control; `transform` and `opacity` only; one reveal at most, none where the theme keeps still, visible by default.
 - **Stamp.** Line 1 of CSS is the scaffold's stamp skeleton with every field filled, then the critique line (`gates.md` § 3), then any `waive` and `answered` lines, all within the first 40 lines.
-- **Existing stylesheets are append-only:** the imports go right after the last `@import`, never below a rule or a `@tailwind` directive; reuse the project's token names ([`references/export-formats.md`](references/export-formats.md)).
+- **Existing stylesheets:** preserve unrelated rules; make focused edits when needed. For new imports, the imports go right after the last `@import`, never below a rule or a `@tailwind` directive; reuse the project's token names ([`references/export-formats.md`](references/export-formats.md)).
 - **Log.** `node <skill-dir>/scripts/theme.mjs log --entry '<json>'` puts the build atop `.hallmark/log.json` with the fields rotation reads (`shape`, `theme`, `axes`, `hero`, `nav`, `footer`, `imagery`, `photos`, `entry`, `fingerprint`, `sections`, `signature`, `waived`, `prompt`) and names any you left out.
 
 ### 7. Sweep
 
-1. `node <skill-dir>/scripts/sloplint.mjs <files> --genre <genre> --render` (`--scope component` or `--scope app` where it applies; in a framework project, `--url http://localhost:<port>/<route>` with the dev server running). Fix every FAIL and re-run until clean. The render tier writes the screenshots; never drive a browser by hand.
+1. `node <skill-dir>/scripts/sloplint.mjs <files> --genre <genre> --render` (`--scope component` or `--scope app` where it applies; in a framework project, `--url http://localhost:<port>/<route>` with the dev server running). Fix every FAIL and re-run until clean. The render tier writes the screenshots. Use available browser tools for interaction checks or when scripted rendering is unavailable; report which checks actually ran.
 2. Load [`references/gates.md`](references/gates.md) § 5 and walk the J and R/J gates. Confirm or dismiss every WARN. Fix every open Floor finding; fix or waive every Reflex one; answer every Finish one.
 3. The finish review in fresh context (`gates.md` § 6; the reviewer reads its prompt, you never open `review-*.md`): act on its first word (`recapture`, `rebuild`, `fix`, `ship`) and score the fixes yourself.
 4. Close with the material ask: every slot, its size and what belongs there, then the one piece of material that would most improve the page.
@@ -151,4 +151,4 @@ Verification is budgeted: one batched inspection, one fix batch, at most one con
 
 ## Branches
 
-[`references/flow.md`](references/flow.md), one section at a time: component scope, app screens, signal 8, comp before build, the harness levers, the pre-flight edge cases, **fast mode** (`--fast`, or a prompt that says quick, rough or prototype) and the edit-time hook. In an existing project, name the files you will touch first; never delete a route or a component tree without a file-level plan the user approved.
+[`references/flow.md`](references/flow.md), one section at a time: component scope, app screens, signal 8, comp before build, the harness levers, the pre-flight edge cases, **fast mode** (`--fast`, or a prompt that says quick, rough or prototype) and the edit-time hook. In an existing project, name the files you will touch first; preserve existing routes and behavior unless their removal is within the user-authorized scope; ask only when the scope is genuinely unclear.

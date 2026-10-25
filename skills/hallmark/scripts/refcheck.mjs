@@ -32,7 +32,7 @@ const add = (level, file, line, rule, msg) => findings.push({ level, file: relat
 const lineAt = (src, i) => src.slice(0, i).split('\n').length;
 
 const SKILL = join(ROOT, 'SKILL.md');
-const VERSION = (/^version:\s*([\d.]+)/m.exec(read(SKILL)) || [])[1];
+const VERSION = (/^\s*version:\s*["\']?([\d.]+)/m.exec(read(SKILL)) || [])[1];
 
 const gatesSrc = read(join(ROOT, 'references', 'gates.md'));
 const GATES = new Map();
